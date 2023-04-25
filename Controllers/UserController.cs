@@ -5,9 +5,10 @@ namespace MyGym.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
-        public ActionResult<Task<List<UserModel>>> FindAll()
+        [HttpGet]
+        public ActionResult<List<UserModel>> FindAll()
         {
             return Ok();
         }
