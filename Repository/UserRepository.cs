@@ -1,10 +1,17 @@
-﻿using MyGym.Models;
+﻿using MyGym.Data;
+using MyGym.Models;
 using MyGym.Repository.Interface;
 
 namespace MyGym.Repository
 {
     public class UserRepository : IUserRepository
     {
+        private readonly MyGymDBContext _dbContext;
+        public UserRepository(MyGymDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public Task<UserModel> Create(UserModel model)
         {
             throw new NotImplementedException();
