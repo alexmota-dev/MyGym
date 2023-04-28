@@ -38,6 +38,20 @@ namespace MyGym.Controllers
             }
             catch
             {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<UserModel>> Create([FromBody] UserModel user)
+        {
+            try
+            {
+                await _userRepository.Create(user);
+                return user;
+            }
+            catch
+            {
                 return BadRequest();
             }
         }
