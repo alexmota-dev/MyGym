@@ -28,7 +28,7 @@ namespace MyGym.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<ActionResult<UserModel>> FindById(string id)
         {
             try
@@ -48,6 +48,20 @@ namespace MyGym.Controllers
             try
             {
                 await _userRepository.Create(user);
+                return user;
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserModel>> Update([FromBody] UserModel user, string id)
+        {
+            try
+            {
+                await _userRepository.Update(user, id);
                 return user;
             }
             catch
