@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyGym.Data;
+using MyGym.Repository;
+using MyGym.Repository.Interface;
 
 namespace MyGym
 {
@@ -17,6 +19,9 @@ namespace MyGym
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<MyGymDBContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+            //Injeção de dependência, UserRepository usa IUseRepository
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
