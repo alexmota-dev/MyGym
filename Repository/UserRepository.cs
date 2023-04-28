@@ -1,4 +1,5 @@
-﻿using MyGym.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MyGym.Data;
 using MyGym.Models;
 using MyGym.Repository.Interface;
 
@@ -12,29 +13,45 @@ namespace MyGym.Repository
             _dbContext = dbContext;
         }
 
-        public Task<UserModel> Create(UserModel model)
+        public async Task<UserModel> Create(UserModel model)
         {
-            throw new NotImplementedException();
+            await _dbContext.Users.AddAsync(model);
+            await _dbContext.SaveChangesAsync();
+            return model;
         }
 
-        public Task<UserModel> Delete(string id)
+        public async Task<bool> Delete(string id)
         {
-            throw new NotImplementedException();
+            UserModel userDeleting = await _dbContext.Users.FirstAsync(x => x.Id == id);
+            _dbContext.Users.Remove(userDeleting);
+            await _dbContext.SaveChangesAsync();
+            return true;
+
         }
 
         public Task<List<UserModel>> GetAll()
         {
-            throw new NotImplementedException();
+            return _dbContext.Users.ToListAsync();
         }
 
-        public Task<UserModel> GetById(int id)
+        public async Task<UserModel> GetById(string id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Users.FirstAsync(x => x.Id == id);
         }
 
-        public Task<UserModel> Update(UserModel model, string id)
+        public async Task<UserModel> Update(UserModel model, string id)
         {
-            throw new NotImplementedException();
+            UserModel ExistingUser = await GetById(id) ?? throw new Exception($"Não existe user com ${id}");
+
+            ExistingUser.Name = model.Name;
+            ExistingUser.Password = model.Password;
+            ExistingUser.Email = model.Email;
+            ExistingUser.Avatar = model.Avatar;
+
+            _dbContext.Users.Update(ExistingUser);
+            await _dbContext.SaveChangesAsync();
+
+            return model;
         }
     }
 }
