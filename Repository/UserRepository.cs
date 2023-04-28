@@ -29,9 +29,9 @@ namespace MyGym.Repository
 
         }
 
-        public Task<List<UserModel>> GetAll()
+        public async Task<List<UserModel>> GetAll()
         {
-            return _dbContext.Users.ToListAsync();
+            return await _dbContext.Users.ToListAsync();
         }
 
         public async Task<UserModel> GetById(string id)
