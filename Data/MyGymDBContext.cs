@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyGym.Data.Map;
 using MyGym.Models;
 
 namespace MyGym.Data
@@ -9,6 +10,12 @@ namespace MyGym.Data
         {
         }    
 
-        public DbSet<UserModel> Users { get; set; } 
+        public DbSet<UserModel> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserMap());
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
