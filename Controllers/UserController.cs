@@ -27,5 +27,19 @@ namespace MyGym.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult<UserModel>> FindById(string id)
+        {
+            try
+            {
+                UserModel user = await _userRepository.GetById(id);
+                return user;
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }
