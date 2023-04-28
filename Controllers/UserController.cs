@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyGym.Models;
 using MyGym.Repository;
+using MyGym.Repository.Interface;
 
 namespace MyGym.Controllers
 {
@@ -8,15 +9,23 @@ namespace MyGym.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserRepository _userRepository;
-        public UserController(UserRepository userRepository)
+        private readonly IUserRepository _userRepository;
+        public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
         [HttpGet]
         public async Task<ActionResult<List<UserModel>>> FindAll()
         {
-            return await _userRepository.GetAll();
+            try
+            {
+                List<UserModel> users = await _userRepository.GetAll();
+                return users;
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }
