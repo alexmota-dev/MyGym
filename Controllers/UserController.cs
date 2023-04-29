@@ -69,5 +69,19 @@ namespace MyGym.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> Delete(string id)
+        {
+            try
+            {
+                await _userRepository.Delete(id);
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }
