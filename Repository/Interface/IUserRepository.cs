@@ -9,5 +9,6 @@ namespace MyGym.Repository.Interface
         Task<UserModel> Create(UserModel model);
         Task<UserModel> Update(UserModel model, string id);
         Task<bool> Delete(string id);
+        Task<UserModel> GetByEmailAndPassword(string email, string password);
     }
 }
