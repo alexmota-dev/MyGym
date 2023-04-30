@@ -41,17 +41,23 @@ namespace MyGym.Repository
 
         public async Task<UserModel> Update(UserModel model, string id)
         {
-            UserModel ExistingUser = await GetById(id) ?? throw new Exception($"Não existe user com ${id}");
+            UserModel existingUser = await GetById(id) ?? throw new Exception($"Não existe user com ${id}");
 
-            ExistingUser.Name = model.Name;
-            ExistingUser.Password = model.Password;
-            ExistingUser.Email = model.Email;
-            ExistingUser.Avatar = model.Avatar;
+            existingUser.Name = model.Name;
+            existingUser.Password = model.Password;
+            existingUser.Email = model.Email;
+            existingUser.Avatar = model.Avatar;
 
-            _dbContext.Users.Update(ExistingUser);
+            _dbContext.Users.Update(existingUser);
             await _dbContext.SaveChangesAsync();
 
             return model;
+        }
+
+        public async Task<UserModel> GetByEmailAndPassword(string email, string password)
+        {
+            UserModel existingUser = await _dbContext.Users.FirstAsync(x => x.Email == email && x.Password == password);
+            return existingUser;
         }
     }
 }
