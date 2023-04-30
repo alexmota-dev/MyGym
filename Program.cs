@@ -1,44 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using MyGym.Data;
-using MyGym.Repository;
-using MyGym.Repository.Interface;
+using MyGym;
 
-namespace MyGym
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
+var startup = new Startup(builder.Configuration);
+startup.ConfigureServices(builder);
 
-            // Add services to the container.
+var app = builder.Build();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddDbContext<MyGymDBContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-            //Injeção de dependência, UserRepository usa IUseRepository
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
-}
+startup.Configure(app, app.Environment);
+app.Run();
