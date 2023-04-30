@@ -2,6 +2,7 @@
 using MyGym.Models;
 using MyGym.Repository;
 using MyGym.Repository.Interface;
+using MyGym.Services;
 
 namespace MyGym.Controllers
 {
@@ -14,6 +15,33 @@ namespace MyGym.Controllers
         {
             _userRepository = userRepository;
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<dynamic>> AuthenticateAsync([FromBody] UserModel model)
+        {
+            if(model == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            UserModel user = await _userRepository.GetByEmailAndPassword(model.Email, model.Password);
+            if (user == null)
+            {
+                return NotFound(new { message = "Usuário ou senha inválidos" });
+            }
+
+            var token = TokenService.GenerateToken(model);
+
+            user.Password = "";
+
+            return new
+            {
+                user,
+                token
+            };
+            
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<UserModel>>> FindAll()
         {
