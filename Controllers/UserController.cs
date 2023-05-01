@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyGym.Models;
 using MyGym.Repository;
 using MyGym.Repository.Interface;
 using MyGym.Services;
+using System.Net;
 
 namespace MyGym.Controllers
 {
@@ -29,17 +31,14 @@ namespace MyGym.Controllers
             {
                 return NotFound(new { message = "Usuário ou senha inválidos" });
             }
+                var token = TokenService.GenerateToken(user);
+                user.Password = "";
 
-            var token = TokenService.GenerateToken(model);
-
-            user.Password = "";
-
-            return new
-            {
-                user,
-                token
-            };
-            
+                return new
+                {
+                    user,
+                    token
+                };
         }
 
         [HttpGet]
@@ -111,5 +110,10 @@ namespace MyGym.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet]
+        [Route("authenticated")]
+        [Authorize]
+        public string Authenticated() => $"Autenticado - ${User.Identity.Name}";
     }
 }
